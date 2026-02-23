@@ -123,6 +123,35 @@
   .upload-btn:hover { background: var(--navy-light); transform: translateY(-1px); box-shadow: var(--shadow); }
   #file-input { display: none; }
 
+  /* データメニュー */
+  .data-menu {
+    position: absolute;
+    top: 56px;
+    right: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1000;
+    min-width: 200px;
+  }
+  .data-menu.open { display: flex; }
+  .data-menu button {
+    background: none;
+    border: none;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .data-menu button:hover { background: var(--bg); }
+
   /* 書籍リスト */
   .book-list {
     width: 100%;
@@ -283,7 +312,6 @@
     box-shadow: var(--shadow-lg);
     cursor: grab;
     transform-origin: top center;
-    max-width: 100%;
   }
   #pdf-canvas:active { cursor: grabbing; }
 
@@ -769,6 +797,127 @@
     min-width: 40px;
   }
 
+  /* ===== DRAWING ===== */
+  #drawing-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+    z-index: 5;
+    pointer-events: none; /* デフォルトでタッチ無効 */
+  }
+  .drawing-toolbar {
+    position: absolute;
+    bottom: 16px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 10;
+  }
+  .draw-toggle {
+    background: rgba(255,255,255,0.95);
+    border: 2px solid var(--navy);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.15s;
+  }
+  .draw-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .drawing-tools {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 24px;
+    padding: 6px 10px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .drawing-tools.open {
+    display: flex;
+  }
+  .draw-tool, .draw-size, .draw-clear {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .draw-tool.active, .draw-size.active {
+    border-color: var(--navy);
+    background: var(--navy-pale);
+  }
+  .draw-tool:hover, .draw-size:hover, .draw-clear:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .draw-color {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .draw-color.active {
+    box-shadow: 0 0 0 3px var(--navy);
+    transform: scale(1.1);
+  }
+  .draw-size {
+    font-size: 11px;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+  }
+  .toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 2px;
+  }
+
+  /* ===== CHECKMARKS ===== */
+  #checkmarks-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .checkmark {
+    position: absolute;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--correct);
+    cursor: pointer;
+    pointer-events: auto;
+    user-select: none;
+    text-shadow: 0 0 3px white, 0 0 6px white;
+    transition: transform 0.15s;
+  }
+  .checkmark:hover {
+    transform: scale(1.2);
+  }
+
   /* トースト通知 */
   .toast {
     position: fixed;
@@ -806,9 +955,17 @@
   <h1>📚 社労士 問題集</h1>
   <div class="header-right">
     <button class="upload-btn" style="padding:8px 16px;font-size:13px;" onclick="document.getElementById('file-input').click()">＋ PDF追加</button>
+    <button class="upload-btn" style="padding:8px 12px;font-size:16px;margin-left:6px;" onclick="toggleDataMenu()" title="データ管理">⚙</button>
     <input type="file" id="file-input" accept="application/pdf">
+    <input type="file" id="import-file-input" accept="application/json" style="display:none;">
   </div>
 </header>
+
+<!-- データメニュー -->
+<div class="data-menu" id="data-menu">
+  <button onclick="exportData()">📥 データをエクスポート</button>
+  <button onclick="document.getElementById('import-file-input').click()">📤 データをインポート</button>
+</div>
 
 <!-- ===== アップロード・書籍一覧 ===== -->
 <div id="upload-screen">
@@ -855,6 +1012,8 @@
   <div class="viewer-body">
     <div id="canvas-container">
       <canvas id="pdf-canvas"></canvas>
+      <canvas id="drawing-canvas"></canvas>
+      <div id="checkmarks-layer"></div>
       <div class="status-overlay" id="status-overlay"></div>
       <div class="page-indicator" id="page-indicator">1 / 1</div>
       <div id="loading-overlay">
@@ -866,6 +1025,24 @@
         <div class="zoom-level" id="zoom-level">100%</div>
         <button class="zoom-btn" onclick="changeZoom(0.25)">＋</button>
         <button class="zoom-btn" onclick="resetZoom()" title="リセット" style="font-size:16px;">⊙</button>
+      </div>
+      <div class="drawing-toolbar">
+        <button class="draw-toggle" onclick="toggleDrawingToolbar()" title="手書きツール">✏️</button>
+        <div class="drawing-tools">
+          <button class="draw-tool active" data-tool="pen" onclick="setDrawTool('pen')" title="ペン">✏️</button>
+          <button class="draw-tool" data-tool="eraser" onclick="setDrawTool('eraser')" title="消しゴム">🧹</button>
+          <div class="toolbar-divider"></div>
+          <button class="draw-color active" data-color="#000" style="background:#000" onclick="setDrawColor('#000')"></button>
+          <button class="draw-color" data-color="#e74c3c" style="background:#e74c3c" onclick="setDrawColor('#e74c3c')"></button>
+          <button class="draw-color" data-color="#3498db" style="background:#3498db" onclick="setDrawColor('#3498db')"></button>
+          <button class="draw-color" data-color="#2ecc71" style="background:#2ecc71" onclick="setDrawColor('#2ecc71')"></button>
+          <div class="toolbar-divider"></div>
+          <button class="draw-size active" data-size="2" onclick="setDrawSize(2)">細</button>
+          <button class="draw-size" data-size="4" onclick="setDrawSize(4)">中</button>
+          <button class="draw-size" data-size="8" onclick="setDrawSize(8)">太</button>
+          <div class="toolbar-divider"></div>
+          <button class="draw-clear" onclick="clearDrawing()" title="全消去">🗑</button>
+        </div>
       </div>
     </div>
 
@@ -891,6 +1068,10 @@
         <button class="action-btn btn-memo" id="btn-memo" onclick="openMemo()">
           <span>📝</span>
           <span class="btn-label">メモ</span>
+        </button>
+        <button class="action-btn btn-check" id="btn-check" onclick="toggleCheckMode()">
+          <span>✓</span>
+          <span class="btn-label">チェック</span>
         </button>
         <button class="action-btn btn-list" onclick="openSidebar()">
           <span>📋</span>
@@ -1031,8 +1212,10 @@ function loadState() {
 
 function getRecord(bookId, pageIdx) {
   const key = `${bookId}_${pageIdx}`;
-  if (!state.records[key]) state.records[key] = { status: 'UNANSWERED', bookmarked: false, memo: '', history: [] };
-  if (!state.records[key].history) state.records[key].history = []; // 旧データ互換
+  if (!state.records[key]) state.records[key] = { status: 'UNANSWERED', bookmarked: false, memo: '', history: [], drawing: null, checkmarks: [] };
+  if (!state.records[key].history) state.records[key].history = [];
+  if (!state.records[key].drawing) state.records[key].drawing = null;
+  if (!state.records[key].checkmarks) state.records[key].checkmarks = [];
   return state.records[key];
 }
 
@@ -1270,6 +1453,7 @@ async function openBook(bookId) {
   await renderPage(viewer.currentPage);
   showLoading(false);
   showZoomControls();
+  setupDrawingEvents(); // 手書きイベントを設定
 }
 
 function closeViewer() {
@@ -1304,8 +1488,16 @@ async function renderPage(pageIdx) {
 
   const canvas = document.getElementById('pdf-canvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
+  
+  // 高解像度対応（Retina等）
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = viewport.width * dpr;
+  canvas.height = viewport.height * dpr;
+  canvas.style.width = viewport.width + 'px';
+  canvas.style.height = viewport.height + 'px';
+  
+  // canvasのコンテキストをスケール
+  ctx.scale(dpr, dpr);
 
   viewer.renderTask = page.render({ canvasContext: ctx, viewport });
   try {
@@ -1326,6 +1518,8 @@ async function renderPage(pageIdx) {
   document.getElementById('next-btn').disabled = pageIdx >= book.totalPages - 1;
 
   updateActionButtons();
+  initDrawingCanvas(); // 手書きキャンバスを初期化
+  renderCheckmarks(); // チェックマークを表示
   showLoading(false);
 }
 
@@ -1394,6 +1588,41 @@ function resetZoom() {
   showZoomControls();
 }
 
+// ピンチズーム（2本指でのズームイン/アウト）
+let pinchStartDistance = 0;
+let pinchStartZoom = 1.0;
+
+function getPinchDistance(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('canvas-container');
+  if (!container) return;
+  
+  container.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      pinchStartDistance = getPinchDistance(e.touches);
+      pinchStartZoom = viewer.zoom;
+    }
+  }, { passive: false });
+  
+  container.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const currentDistance = getPinchDistance(e.touches);
+      const scale = currentDistance / pinchStartDistance;
+      viewer.zoom = Math.max(0.5, Math.min(4.0, pinchStartZoom * scale));
+      document.getElementById('zoom-level').textContent = Math.round(viewer.zoom * 100) + '%';
+      renderPage(viewer.currentPage);
+      showZoomControls();
+    }
+  }, { passive: false });
+});
+
 // ===== アクション =====
 function updateActionButtons() {
   const rec = getRecord(viewer.bookId, viewer.currentPage);
@@ -1457,14 +1686,14 @@ function updateActionButtons() {
 function cycleStatus() {
   const rec = getRecord(viewer.bookId, viewer.currentPage);
   const next = rec.status === 'UNANSWERED' ? 'CORRECT'
-              : rec.status === 'CORRECT' ? 'INCORRECT' : 'UNANSWERED';
+              : rec.status === 'CORRECT' ? 'INCORRECT'
+              : rec.status === 'INCORRECT' ? 'COMPLETED' : 'UNANSWERED';
 
-  // 正解・不正解に変更した時だけ履歴に追加
+  // 正解・不正解・完答に変更した時だけ履歴に追加
   const updates = { status: next };
   if (next !== 'UNANSWERED') {
     const now = new Date();
     const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
-    // 同じ日に同じステータスが既にあれば上書き（重複防止）
     const today = rec.history.find(h => h.date === dateStr);
     if (today) {
       today.status = next;
@@ -1476,7 +1705,7 @@ function cycleStatus() {
 
   setRecord(viewer.bookId, viewer.currentPage, updates);
   updateActionButtons();
-  const labels = { UNANSWERED: '未回答 —', CORRECT: '正解 ○', INCORRECT: '不正解 ×' };
+  const labels = { UNANSWERED: '未回答 —', CORRECT: '正解 ○', INCORRECT: '不正解 ×', COMPLETED: '完答 ✓' };
   showToast(labels[next]);
 }
 
@@ -1485,6 +1714,24 @@ function toggleBookmark() {
   setRecord(viewer.bookId, viewer.currentPage, { bookmarked: !rec.bookmarked });
   updateActionButtons();
   showToast(rec.bookmarked ? 'ブックマークを解除' : '★ ブックマークしました');
+}
+
+function toggleCheckMode() {
+  drawingState.checkMode = !drawingState.checkMode;
+  const btn = document.getElementById('btn-check');
+  const drawCanvas = document.getElementById('drawing-canvas');
+  
+  if (drawingState.checkMode) {
+    btn.classList.add('active');
+    drawCanvas.style.pointerEvents = 'auto';
+    drawCanvas.style.cursor = 'pointer';
+    showToast('✓ チェックモード ON');
+  } else {
+    btn.classList.remove('active');
+    drawCanvas.style.pointerEvents = 'none';
+    drawCanvas.style.cursor = 'crosshair';
+    showToast('チェックモード OFF');
+  }
 }
 
 // ===== メモ =====
@@ -1604,10 +1851,324 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
+// ===== 手書き機能 =====
+let drawingState = {
+  tool: 'pen',
+  color: '#000',
+  size: 2,
+  isDrawing: false,
+  lastX: 0,
+  lastY: 0,
+  checkMode: false
+};
+
+function toggleDrawingToolbar() {
+  const tools = document.querySelector('.drawing-tools');
+  tools.classList.toggle('open');
+}
+
+// ツールバー外クリックで閉じる
+document.addEventListener('click', e => {
+  const toolbar = document.querySelector('.drawing-toolbar');
+  const tools = document.querySelector('.drawing-tools');
+  if (toolbar && !toolbar.contains(e.target)) {
+    tools.classList.remove('open');
+  }
+});
+
+function initDrawingCanvas() {
+  const pdfCanvas = document.getElementById('pdf-canvas');
+  const drawCanvas = document.getElementById('drawing-canvas');
+  drawCanvas.width = pdfCanvas.width;
+  drawCanvas.height = pdfCanvas.height;
+  drawCanvas.style.width = pdfCanvas.style.width || pdfCanvas.width + 'px';
+  drawCanvas.style.height = pdfCanvas.style.height || pdfCanvas.height + 'px';
+  
+  // 既存の描画を復元
+  loadDrawing();
+}
+
+function setDrawTool(tool) {
+  drawingState.tool = tool;
+  document.querySelectorAll('.draw-tool').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tool === tool);
+  });
+  const drawCanvas = document.getElementById('drawing-canvas');
+  
+  // ペンまたは消しゴムの時のみタッチ有効
+  if (tool === 'pen' || tool === 'eraser') {
+    drawCanvas.style.pointerEvents = 'auto';
+    drawCanvas.style.cursor = tool === 'pen' ? 'crosshair' : 'cell';
+  } else {
+    drawCanvas.style.pointerEvents = 'none';
+  }
+}
+
+function setDrawColor(color) {
+  drawingState.color = color;
+  document.querySelectorAll('.draw-color').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === color);
+  });
+}
+
+function setDrawSize(size) {
+  drawingState.size = size;
+  document.querySelectorAll('.draw-size').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.size) === size);
+  });
+}
+
+function getDrawCoords(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {
+    x: (clientX - rect.left) * scaleX,
+    y: (clientY - rect.top) * scaleY
+  };
+}
+
+function startDrawing(e) {
+  e.preventDefault();
+  
+  // チェックモードの場合
+  if (drawingState.checkMode) {
+    const canvas = document.getElementById('pdf-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    // 表示座標系で渡す
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    addCheckmark(x, y);
+    return;
+  }
+  
+  const canvas = document.getElementById('drawing-canvas');
+  const coords = getDrawCoords(e, canvas);
+  drawingState.isDrawing = true;
+  drawingState.lastX = coords.x;
+  drawingState.lastY = coords.y;
+}
+
+function draw(e) {
+  if (!drawingState.isDrawing) return;
+  e.preventDefault();
+  
+  const canvas = document.getElementById('drawing-canvas');
+  const ctx = canvas.getContext('2d');
+  const coords = getDrawCoords(e, canvas);
+  
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = drawingState.size;
+  
+  if (drawingState.tool === 'pen') {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = drawingState.color;
+  } else {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = drawingState.size * 3;
+  }
+  
+  ctx.beginPath();
+  ctx.moveTo(drawingState.lastX, drawingState.lastY);
+  ctx.lineTo(coords.x, coords.y);
+  ctx.stroke();
+  
+  drawingState.lastX = coords.x;
+  drawingState.lastY = coords.y;
+}
+
+function stopDrawing() {
+  if (drawingState.isDrawing) {
+    drawingState.isDrawing = false;
+    saveDrawing();
+  }
+}
+
+function saveDrawing() {
+  const canvas = document.getElementById('drawing-canvas');
+  const dataUrl = canvas.toDataURL();
+  setRecord(viewer.bookId, viewer.currentPage, { drawing: dataUrl });
+}
+
+function loadDrawing() {
+  const canvas = document.getElementById('drawing-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const rec = getRecord(viewer.bookId, viewer.currentPage);
+  if (rec.drawing) {
+    const img = new Image();
+    img.onload = () => ctx.drawImage(img, 0, 0);
+    img.src = rec.drawing;
+  }
+}
+
+function clearDrawing() {
+  if (!confirm('このページの手書きをすべて消去しますか？')) return;
+  const canvas = document.getElementById('drawing-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  setRecord(viewer.bookId, viewer.currentPage, { drawing: null });
+  showToast('手書きを消去しました');
+}
+
+// ===== チェックマーク管理 =====
+function addCheckmark(x, y) {
+  const rec = getRecord(viewer.bookId, viewer.currentPage);
+  const canvas = document.getElementById('pdf-canvas');
+  
+  // 表示サイズ（CSS）を使って座標をパーセンテージに変換
+  const displayWidth = parseInt(canvas.style.width);
+  const displayHeight = parseInt(canvas.style.height);
+  const xPercent = x / displayWidth;
+  const yPercent = y / displayHeight;
+  
+  rec.checkmarks.push({ x: xPercent, y: yPercent });
+  setRecord(viewer.bookId, viewer.currentPage, { checkmarks: rec.checkmarks });
+  renderCheckmarks();
+  showToast('✓ チェックを追加しました');
+}
+
+function removeCheckmark(index) {
+  const rec = getRecord(viewer.bookId, viewer.currentPage);
+  rec.checkmarks.splice(index, 1);
+  setRecord(viewer.bookId, viewer.currentPage, { checkmarks: rec.checkmarks });
+  renderCheckmarks();
+  showToast('チェックを削除しました');
+}
+
+function renderCheckmarks() {
+  const layer = document.getElementById('checkmarks-layer');
+  const canvas = document.getElementById('pdf-canvas');
+  const rec = getRecord(viewer.bookId, viewer.currentPage);
+  
+  layer.innerHTML = '';
+  if (!rec.checkmarks || rec.checkmarks.length === 0) return;
+  
+  // 表示サイズ（CSS）を使って位置を計算
+  const displayWidth = parseInt(canvas.style.width);
+  const displayHeight = parseInt(canvas.style.height);
+  
+  rec.checkmarks.forEach((mark, index) => {
+    const el = document.createElement('div');
+    el.className = 'checkmark';
+    el.textContent = '✓';
+    el.style.left = (mark.x * displayWidth) + 'px';
+    el.style.top = (mark.y * displayHeight) + 'px';
+    el.onclick = (e) => {
+      e.stopPropagation();
+      removeCheckmark(index);
+    };
+    layer.appendChild(el);
+  });
+}
+
+// イベントリスナー
+const setupDrawingEvents = () => {
+  const canvas = document.getElementById('drawing-canvas');
+  
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseout', stopDrawing);
+  
+  canvas.addEventListener('touchstart', startDrawing, { passive: false });
+  canvas.addEventListener('touchmove', draw, { passive: false });
+  canvas.addEventListener('touchend', stopDrawing);
+  canvas.addEventListener('touchcancel', stopDrawing);
+};
+
 // ===== ユーティリティ =====
 function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ===== データ管理 =====
+function toggleDataMenu() {
+  const menu = document.getElementById('data-menu');
+  menu.classList.toggle('open');
+}
+// メニュー外クリックで閉じる
+document.addEventListener('click', e => {
+  const menu = document.getElementById('data-menu');
+  if (!e.target.closest('.data-menu') && !e.target.closest('[onclick*="toggleDataMenu"]')) {
+    menu.classList.remove('open');
+  }
+});
+
+async function exportData() {
+  showToast('データをエクスポート中…');
+  const exportData = {
+    version: 1,
+    exportDate: new Date().toISOString(),
+    state: state,
+    pdfs: {}
+  };
+  // IndexedDBから全PDFデータを取得
+  for (const book of state.books) {
+    const arrayBuffer = await loadPdf(book.id);
+    if (arrayBuffer) {
+      // ArrayBufferをBase64に変換
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      exportData.pdfs[book.id] = btoa(binary);
+    }
+  }
+  // JSONファイルとしてダウンロード
+  const blob = new Blob([JSON.stringify(exportData)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sharoshi_mondai_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('エクスポート完了！');
+  toggleDataMenu();
+}
+
+document.getElementById('import-file-input').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  
+  if (!confirm('インポートすると現在のデータに上書き・追加されます。\n続けますか？')) return;
+  
+  showToast('データをインポート中…');
+  try {
+    const text = await file.text();
+    const importData = JSON.parse(text);
+    
+    // PDFデータをIndexedDBに復元
+    if (importData.pdfs) {
+      for (const [bookId, base64] of Object.entries(importData.pdfs)) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        await savePdf(bookId, bytes.buffer);
+      }
+    }
+    
+    // stateをマージ（既存 + 新規）
+    const existingIds = new Set(state.books.map(b => b.id));
+    const newBooks = importData.state.books.filter(b => !existingIds.has(b.id));
+    state.books.push(...newBooks);
+    state.records = { ...state.records, ...importData.state.records };
+    
+    saveState();
+    renderBookList();
+    showToast(`インポート完了！（${newBooks.length}冊追加）`);
+  } catch(err) {
+    showToast('インポートに失敗しました');
+    console.error(err);
+  }
+  toggleDataMenu();
+});
 
 // ===== 初期化 =====
 loadState();
