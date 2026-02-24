@@ -807,811 +807,53 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow);
   }
-  .t  #upload-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .upload-box {
-    border: 2.5px dashed var(--navy-light);
-    border-radius: 16px;
-    background: white;
-    width: 100%;
-    max-width: 440px;
-    padding: 28px 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .upload-box:hover, .upload-box.drag-over {
-    border-color: var(--accent);
-    background: var(--bookmark-bg);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
-  .upload-icon {
-    font-size: 52px;
-    margin-bottom: 16px;
-  }
-  .upload-box h2 {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 18px;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-  .upload-box p {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.6;
-  }
-  .upload-btn {
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 14px 36px;
-    font-size: 15px;
-    font-family: 'Noto Sans JP', sans-serif;
+  .toggle-status {
+    font-size: 24px;
     font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.04em;
+    color: var(--incorrect);
   }
-  .upload-btn:hover { background: var(--navy-light); transform: translateY(-1px); box-shadow: var(--shadow); }
-  #file-input { display: none; }
-
-  /* データメニュー */
-  .data-menu {
-    position: absolute;
-    top: 56px;
-    right: 16px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: var(--shadow-lg);
-    padding: 8px;
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    z-index: 1000;
-    min-width: 200px;
+  .drawing-toggle-btn.active .toggle-status {
+    color: var(--correct);
   }
-  .data-menu.open { display: flex; }
-  .data-menu button {
-    background: none;
-    border: none;
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background 0.15s;
-  }
-  .data-menu button:hover { background: var(--bg); }
-
-  /* 書籍リスト */
-  .book-list {
-    width: 100%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  /* 科目グループ */
-  .subject-group {}
-  .subject-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 4px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .subject-badge {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .subject-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--navy);
-    letter-spacing: 0.05em;
-    flex: 1;
-  }
-  .subject-count {
+  .toggle-label {
     font-size: 11px;
     color: var(--muted);
-    background: var(--border);
-    border-radius: 10px;
-    padding: 1px 7px;
   }
-  .subject-chevron {
-    font-size: 12px;
-    color: var(--muted);
-    transition: transform 0.2s;
-  }
-  .subject-group.collapsed .subject-chevron { transform: rotate(-90deg); }
-  .subject-books {
+  .tool-buttons, .color-buttons, .size-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-left: 16px;
-    overflow: hidden;
-    transition: all 0.2s;
-  }
-  .subject-group.collapsed .subject-books {
-    display: none;
-  }
-  .book-item {
-    background: white;
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: all 0.15s;
-    border: 1.5px solid transparent;
-  }
-  .book-item:hover { border-color: var(--navy-light); transform: translateX(2px); }
-  .book-item-icon { font-size: 24px; }
-  .book-item-info { flex: 1; min-width: 0; }
-  .book-item-title { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .book-item-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .book-stats-mini { display: flex; gap: 6px; margin-top: 4px; }
-  .stat-badge {
-    font-size: 10px; font-weight: 700;
-    padding: 1px 6px; border-radius: 4px;
-  }
-  .stat-badge.correct { background: var(--correct-bg); color: var(--correct); }
-  .stat-badge.incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
-  .stat-badge.bookmark { background: var(--bookmark-bg); color: #b8860b; }
-  .book-item-del {
-    background: none; border: none; cursor: pointer;
-    color: var(--muted); font-size: 16px; padding: 4px;
-    transition: color 0.15s;
-  }
-  .book-item-del:hover { color: var(--incorrect); }
-
-  /* ===== VIEWER SCREEN ===== */
-  #viewer-screen {
-    display: none;
-    flex: 1;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  #viewer-screen.active { display: flex; }
-
-  /* ===== VIEWER TOOLBAR ===== */
-  .viewer-toolbar {
-    background: var(--navy);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 12px;
-    height: 52px;
-    flex-shrink: 0;
     gap: 8px;
-    overflow: hidden;
+    align-items: center;
   }
-  .toolbar-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .toolbar-title {
-    color: var(--accent);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 160px;
-  }
-  .btn-icon {
-    background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: white;
-    border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .btn-icon:hover { background: rgba(255,255,255,0.2); }
-  .btn-icon.active { background: var(--accent); color: var(--navy); border-color: var(--accent); }
-
-  /* ===== PDF AREA ===== */
-  .viewer-body {
+  .draw-tool, .draw-size {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
-
-  #canvas-container {
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    background: #555;
-    padding: 12px;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
-  }
-  #pdf-canvas {
-    display: block;
-    box-shadow: var(--shadow-lg);
-    cursor: grab;
-    transform-origin: top center;
-  }
-  #pdf-canvas:active { cursor: grabbing; }
-
-  /* ページ番号ポップアップ */
-  .page-indicator {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(15,31,61,0.75);
-    color: white;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    backdrop-filter: blur(4px);
-  }
-
-  /* ステータスバッジ（右上） */
-  .status-overlay {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .status-badge-big {
-    font-size: 22px;
-    font-weight: 900;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: var(--shadow);
-  }
-  .status-badge-big.correct { background: var(--correct); color: white; }
-  .status-badge-big.incorrect { background: var(--incorrect); color: white; }
-  .status-badge-big.bookmark { background: var(--bookmark); color: white; }
-
-  /* ローディング */
-  #loading-overlay {
-    position: absolute; inset: 0;
-    background: rgba(68,68,68,0.85);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 20;
-    flex-direction: column; gap: 12px;
-  }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid rgba(255,255,255,0.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ===== BOTTOM BAR ===== */
-  .bottom-bar {
-    background: white;
-    border-top: 1px solid var(--border);
-    padding: 8px 12px 10px;
-    flex-shrink: 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
-  }
-
-  /* 解答履歴 */
-  .history-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 22px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-    padding: 0 2px;
-  }
-  .history-label {
-    font-size: 10px;
-    color: var(--muted);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
-  }
-  .history-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-  .history-chip.correct { background: var(--correct-bg); color: var(--correct); }
-  .history-chip.incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
-  .history-chip .h-date { font-weight: 400; opacity: 0.8; font-size: 10px; }
-
-  /* ページナビ */
-  .nav-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-  .nav-btn {
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    width: 44px; height: 44px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .nav-btn:hover:not(:disabled) { background: var(--navy-light); }
-  .nav-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
-
-  .page-input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .page-input-wrap span { color: var(--muted); font-weight: 400; }
-  #page-num-input {
-    width: 50px;
-    text-align: center;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 4px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  #page-num-input:focus { border-color: var(--navy); }
-
-  /* アクションボタン */
-  .action-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .action-btn {
-    flex: 1;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 8px;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: 'Noto Sans JP', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
-  .action-btn .btn-label { font-size: 11px; opacity: 0.8; }
-  .btn-status {
-    background: #f0f2f7;
-    color: var(--text);
-  }
-  .btn-status.correct { background: var(--correct-bg); color: var(--correct); }
-  .btn-status.incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
-
-  .btn-bookmark {
-    background: #f0f2f7;
-    color: var(--text);
-  }
-  .btn-bookmark.active { background: var(--bookmark-bg); color: #b8860b; }
-
-  .btn-memo {
-    background: #f0f2f7;
-    color: var(--text);
-  }
-  .btn-memo.has-memo { background: #ede9fb; color: #6c4bc7; }
-
-  .btn-list {
-    background: var(--navy);
-    color: white;
-  }
-
-  /* ===== SIDEBAR (BOOKMARK LIST) ===== */
-  .sidebar-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 100;
-  }
-  .sidebar-overlay.open { display: block; }
-
-  .sidebar {
-    position: fixed;
-    top: 0; right: -100%;
-    width: min(360px, 100vw);
-    height: 100%;
-    background: white;
-    box-shadow: var(--shadow-lg);
-    z-index: 101;
-    transition: right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-  }
-  .sidebar.open { right: 0; }
-
-  .sidebar-header {
-    background: var(--navy);
-    color: white;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .sidebar-header h3 {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 16px;
-    color: var(--accent);
-  }
-  .sidebar-close {
-    background: none; border: none; color: white; font-size: 22px; cursor: pointer;
-  }
-
-  .sidebar-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-  }
-  .sidebar-tab {
-    flex: 1;
-    padding: 10px 0;
-    border: none;
-    background: none;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2.5px solid transparent;
-    transition: all 0.15s;
-  }
-  .sidebar-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
-
-  .sidebar-stats {
-    padding: 12px 16px;
-    background: var(--bg);
-    display: flex;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .stat-box {
-    flex: 1;
-    text-align: center;
-    background: white;
-    border-radius: 8px;
-    padding: 8px;
-    box-shadow: var(--shadow);
-  }
-  .stat-box .stat-num { font-size: 20px; font-weight: 900; }
-  .stat-box .stat-lbl { font-size: 10px; color: var(--muted); }
-  .stat-box.c { color: var(--correct); }
-  .stat-box.i { color: var(--incorrect); }
-  .stat-box.b { color: var(--bookmark); }
-
-  .sidebar-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .sidebar-empty {
-    text-align: center;
-    color: var(--muted);
-    padding: 40px 16px;
-    font-size: 13px;
-    line-height: 1.8;
-  }
-  .sidebar-item {
-    background: var(--bg);
-    border-radius: 10px;
-    padding: 10px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.15s;
-    border: 1.5px solid transparent;
-  }
-  .sidebar-item:hover { border-color: var(--navy-light); background: white; }
-  .sidebar-item-badge {
-    font-size: 18px; font-weight: 900;
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .sidebar-item-badge.correct { background: var(--correct-bg); color: var(--correct); }
-  .sidebar-item-badge.incorrect { background: var(--incorrect-bg); color: var(--incorrect); }
-  .sidebar-item-badge.bookmark { background: var(--bookmark-bg); color: #b8860b; }
-  .sidebar-item-info { flex: 1; min-width: 0; }
-  .sidebar-item-page { font-weight: 700; font-size: 13px; }
-  .sidebar-item-memo {
-    font-size: 11px; color: var(--muted);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    margin-top: 2px;
-  }
-  .sidebar-item-arr { color: var(--muted); font-size: 16px; }
-
-  /* ===== MEMO DIALOG ===== */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: white;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: var(--shadow-lg);
-    animation: modal-in 0.2s ease;
-  }
-  @keyframes modal-in {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  .modal-header {
-    padding: 16px 20px 12px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 16px;
-    font-weight: 700;
-  }
-  .modal-body { padding: 16px 20px; }
-  .memo-textarea {
-    width: 100%;
-    height: 120px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: none;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .memo-textarea:focus { border-color: var(--navy); }
-  .modal-footer {
-    padding: 12px 20px 16px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  .btn-cancel {
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 8px 20px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  .btn-save {
-    background: var(--navy);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 24px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  /* 科目選択 */
-  .subject-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  .subject-chip {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    background: white;
-    font-size: 12px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--text);
-  }
-  .subject-chip:hover { border-color: var(--navy-light); background: var(--bg); }
-  .subject-chip.selected { background: var(--navy); color: white; border-color: var(--navy); }
-  .subject-divider {
-    font-size: 11px;
-    color: var(--muted);
-    margin: 6px 0 4px;
-  }
-  .modal-field {
-    margin-bottom: 12px;
-  }
-  .modal-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.04em;
-  }
-  .modal-input {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .modal-input:focus { border-color: var(--navy); }
-
-  /* ズームコントロール */
-  .zoom-controls {
-    position: absolute;
-    bottom: 16px;
-    right: 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-    z-index: 10;
-    background: rgba(255,255,255,0.92);
-    border-radius: 24px;
-    padding: 6px 10px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(0,0,0,0.08);
-    transition: opacity 0.4s, transform 0.4s;
-  }
-  .zoom-controls.hidden {
-    opacity: 0;
-    transform: translateY(10px);
-    pointer-events: none;
-  }
-  .zoom-btn {
-    background: var(--navy);
-    border: none;
-    border-radius: 50%;
-    width: 40px; height: 40px;
-    font-size: 22px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    color: white;
-    flex-shrink: 0;
-  }
-  .zoom-btn:hover { background: var(--navy-light); }
-  .zoom-level {
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    padding: 0 4px;
-    color: var(--navy);
-    min-width: 40px;
-  }
-
-  /* ===== DRAWING ===== */
-  #drawing-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    cursor: crosshair;
-    z-index: 5;
-    pointer-events: none; /* デフォルトでタッチ無効 */
-  }
-  .drawing-toolbar {
-    position: absolute;
-    bottom: 16px;
-    left: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    z-index: 10;
-  }
-  .draw-toggle {
-    background: rgba(255,255,255,0.95);
-    border: 2px solid var(--navy);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    font-size: 22px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-lg);
-    transition: all 0.15s;
-  }
-  .draw-toggle:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
-  .drawing-tools {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 24px;
-    padding: 6px 10px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(0,0,0,0.08);
-  }
-  .drawing-tools.open {
-    display: flex;
-  }
-  .draw-tool, .draw-size, .draw-clear {
     background: white;
     border: 2px solid var(--border);
     border-radius: 8px;
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+    padding: 12px;
+    font-size: 16px;
     cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
     transition: all 0.15s;
+  }
+  .draw-tool .btn-label {
+    font-size: 11px;
+    opacity: 0.8;
   }
   .draw-tool.active, .draw-size.active {
     border-color: var(--navy);
     background: var(--navy-pale);
   }
-  .draw-tool:hover, .draw-size:hover, .draw-clear:hover {
+  .draw-tool:hover, .draw-size:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow);
   }
   .draw-color {
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 3px solid white;
     box-shadow: 0 0 0 2px var(--border);
@@ -1622,17 +864,91 @@
     box-shadow: 0 0 0 3px var(--navy);
     transform: scale(1.1);
   }
-  .draw-size {
-    font-size: 11px;
+  .draw-clear {
+    width: 100%;
+    background: var(--incorrect-bg);
+    border: 2px solid var(--incorrect);
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--incorrect);
     font-weight: 700;
-    width: 32px;
-    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s;
   }
-  .toolbar-divider {
-    width: 1px;
-    height: 24px;
-    background: var(--border);
-    margin: 0 2px;
+  .draw-clear:hover {
+    background: var(--incorrect);
+    color: white;
+  }
+
+  /* ===== ズームモーダル ===== */
+  .zoom-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px 0;
+  }
+  .zoom-display {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  .zoom-percentage {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .zoom-controls-modal {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .zoom-btn-large {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border: 3px solid var(--navy);
+    border-radius: 16px;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .zoom-btn-large:hover {
+    background: var(--navy-pale);
+    transform: scale(1.05);
+  }
+  .zoom-btn-large:active {
+    transform: scale(0.95);
+  }
+  .zoom-reset {
+    display: flex;
+    justify-content: center;
+  }
+  .zoom-reset-btn {
+    width: 100%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .zoom-reset-btn:hover {
+    background: var(--navy-pale);
+    border-color: var(--navy);
   }
 
   /* ===== CHECKMARKS ===== */
@@ -1762,30 +1078,6 @@
         <div class="spinner"></div>
         <span style="color:white;font-size:13px;">読み込み中…</span>
       </div>
-      <div class="zoom-controls hidden">
-        <button class="zoom-btn" onclick="changeZoom(-0.25)">－</button>
-        <div class="zoom-level" id="zoom-level">100%</div>
-        <button class="zoom-btn" onclick="changeZoom(0.25)">＋</button>
-        <button class="zoom-btn" onclick="resetZoom()" title="リセット" style="font-size:16px;">⊙</button>
-      </div>
-      <div class="drawing-toolbar">
-        <button class="draw-toggle" onclick="toggleDrawingToolbar()" title="手書きツール">✏️</button>
-        <div class="drawing-tools">
-          <button class="draw-tool active" data-tool="pen" onclick="setDrawTool('pen')" title="ペン">✏️</button>
-          <button class="draw-tool" data-tool="eraser" onclick="setDrawTool('eraser')" title="消しゴム">🧹</button>
-          <div class="toolbar-divider"></div>
-          <button class="draw-color active" data-color="#000" style="background:#000" onclick="setDrawColor('#000')"></button>
-          <button class="draw-color" data-color="#e74c3c" style="background:#e74c3c" onclick="setDrawColor('#e74c3c')"></button>
-          <button class="draw-color" data-color="#3498db" style="background:#3498db" onclick="setDrawColor('#3498db')"></button>
-          <button class="draw-color" data-color="#2ecc71" style="background:#2ecc71" onclick="setDrawColor('#2ecc71')"></button>
-          <div class="toolbar-divider"></div>
-          <button class="draw-size active" data-size="2" onclick="setDrawSize(2)">細</button>
-          <button class="draw-size" data-size="4" onclick="setDrawSize(4)">中</button>
-          <button class="draw-size" data-size="8" onclick="setDrawSize(8)">太</button>
-          <div class="toolbar-divider"></div>
-          <button class="draw-clear" onclick="clearDrawing()" title="全消去">🗑</button>
-        </div>
-      </div>
     </div>
 
     <div class="bottom-bar">
@@ -1811,9 +1103,17 @@
           <span>📝</span>
           <span class="btn-label">メモ</span>
         </button>
+        <button class="action-btn btn-draw" id="btn-draw" onclick="openDrawingTools()">
+          <span>✏️</span>
+          <span class="btn-label">手書き</span>
+        </button>
         <button class="action-btn btn-check" id="btn-check" onclick="toggleCheckMode()">
           <span>✓</span>
           <span class="btn-label">チェック</span>
+        </button>
+        <button class="action-btn btn-zoom" onclick="openZoomTools()">
+          <span>🔍</span>
+          <span class="btn-label">ズーム</span>
         </button>
         <button class="action-btn btn-list" onclick="openSidebar()">
           <span>📋</span>
@@ -1850,6 +1150,92 @@
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeMemo()">キャンセル</button>
       <button class="btn-save" onclick="saveMemo()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 手書きツールモーダル -->
+<div class="modal-overlay" id="drawing-modal">
+  <div class="modal">
+    <div class="modal-header">✏️ 手書きツール</div>
+    <div class="modal-body">
+      <div class="drawing-modal-content">
+        <div class="drawing-tool-section">
+          <div class="section-label">手書き機能</div>
+          <div class="drawing-toggle-container">
+            <button class="drawing-toggle-btn" id="drawing-toggle-btn" onclick="toggleDrawingEnabled()">
+              <span class="toggle-status" id="toggle-status">OFF</span>
+              <span class="toggle-label">タップして有効/無効を切り替え</span>
+            </button>
+          </div>
+        </div>
+        <div class="drawing-tool-section">
+          <div class="section-label">ツール</div>
+          <div class="tool-buttons">
+            <button class="draw-tool active" data-tool="pen" onclick="setDrawTool('pen')">
+              <span>✏️</span>
+              <span class="btn-label">ペン</span>
+            </button>
+            <button class="draw-tool" data-tool="eraser" onclick="setDrawTool('eraser')">
+              <span>🧹</span>
+              <span class="btn-label">消しゴム</span>
+            </button>
+          </div>
+        </div>
+        <div class="drawing-tool-section">
+          <div class="section-label">色</div>
+          <div class="color-buttons">
+            <button class="draw-color active" data-color="#000" style="background:#000" onclick="setDrawColor('#000')"></button>
+            <button class="draw-color" data-color="#e74c3c" style="background:#e74c3c" onclick="setDrawColor('#e74c3c')"></button>
+            <button class="draw-color" data-color="#3498db" style="background:#3498db" onclick="setDrawColor('#3498db')"></button>
+            <button class="draw-color" data-color="#2ecc71" style="background:#2ecc71" onclick="setDrawColor('#2ecc71')"></button>
+          </div>
+        </div>
+        <div class="drawing-tool-section">
+          <div class="section-label">太さ</div>
+          <div class="size-buttons">
+            <button class="draw-size active" data-size="2" onclick="setDrawSize(2)">細</button>
+            <button class="draw-size" data-size="4" onclick="setDrawSize(4)">中</button>
+            <button class="draw-size" data-size="8" onclick="setDrawSize(8)">太</button>
+          </div>
+        </div>
+        <div class="drawing-tool-section">
+          <button class="draw-clear" onclick="clearDrawing()">
+            <span>🗑</span>
+            <span>全消去</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="closeDrawingTools()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- ズームモーダル -->
+<div class="modal-overlay" id="zoom-modal">
+  <div class="modal">
+    <div class="modal-header">🔍 ズーム</div>
+    <div class="modal-body">
+      <div class="zoom-modal-content">
+        <div class="zoom-display">
+          <div class="zoom-percentage" id="zoom-percentage">100%</div>
+        </div>
+        <div class="zoom-controls-modal">
+          <button class="zoom-btn-large" onclick="changeZoom(-0.25)">－</button>
+          <button class="zoom-btn-large" onclick="changeZoom(0.25)">＋</button>
+        </div>
+        <div class="zoom-reset">
+          <button class="zoom-reset-btn" onclick="resetZoom()">
+            <span>⊙</span>
+            <span>100%にリセット</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="closeZoomTools()">閉じる</button>
     </div>
   </div>
 </div>
@@ -2194,7 +1580,6 @@ async function openBook(bookId) {
 
   await renderPage(viewer.currentPage);
   showLoading(false);
-  showZoomControls();
   setupDrawingEvents(); // 手書きイベントを設定
 }
 
@@ -2304,30 +1689,32 @@ document.addEventListener('keydown', e => {
 });
 
 // ===== ズーム =====
-let zoomHideTimer;
-function showZoomControls() {
-  const z = document.querySelector('.zoom-controls');
-  if (!z) return;
-  z.classList.remove('hidden');
-  clearTimeout(zoomHideTimer);
-  zoomHideTimer = setTimeout(() => z.classList.add('hidden'), 3000);
+function openZoomTools() {
+  document.getElementById('zoom-modal').classList.add('open');
+  updateZoomDisplay();
 }
 
-// PDF表示エリアをタップしたらズームを表示
-document.getElementById('canvas-container').addEventListener('touchstart', showZoomControls, { passive: true });
-document.getElementById('canvas-container').addEventListener('click', showZoomControls);
+function closeZoomTools() {
+  document.getElementById('zoom-modal').classList.remove('open');
+}
+
+function updateZoomDisplay() {
+  const percentage = Math.round(viewer.zoom * 100) + '%';
+  const elem = document.getElementById('zoom-percentage');
+  if (elem) elem.textContent = percentage;
+}
 
 function changeZoom(delta) {
   viewer.zoom = Math.max(0.5, Math.min(4.0, viewer.zoom + delta));
-  document.getElementById('zoom-level').textContent = Math.round(viewer.zoom * 100) + '%';
+  updateZoomDisplay();
   renderPage(viewer.currentPage);
-  showZoomControls();
 }
+
 function resetZoom() {
   viewer.zoom = 1.0;
-  document.getElementById('zoom-level').textContent = '100%';
+  updateZoomDisplay();
   renderPage(viewer.currentPage);
-  showZoomControls();
+  showToast('ズームを100%にリセットしました');
 }
 
 // ピンチズーム（2本指でのズームイン/アウト）
@@ -2358,9 +1745,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const currentDistance = getPinchDistance(e.touches);
       const scale = currentDistance / pinchStartDistance;
       viewer.zoom = Math.max(0.5, Math.min(4.0, pinchStartZoom * scale));
-      document.getElementById('zoom-level').textContent = Math.round(viewer.zoom * 100) + '%';
+      updateZoomDisplay();
       renderPage(viewer.currentPage);
-      showZoomControls();
     }
   }, { passive: false });
 });
@@ -2461,19 +1847,16 @@ function toggleBookmark() {
 function toggleCheckMode() {
   drawingState.checkMode = !drawingState.checkMode;
   const btn = document.getElementById('btn-check');
-  const drawCanvas = document.getElementById('drawing-canvas');
   
   if (drawingState.checkMode) {
     btn.classList.add('active');
-    drawCanvas.style.pointerEvents = 'auto';
-    drawCanvas.style.cursor = 'pointer';
     showToast('✓ チェックモード ON');
   } else {
     btn.classList.remove('active');
-    drawCanvas.style.pointerEvents = 'none';
-    drawCanvas.style.cursor = 'crosshair';
     showToast('チェックモード OFF');
   }
+  
+  updateDrawingCanvas();
 }
 
 // ===== メモ =====
@@ -2601,22 +1984,57 @@ let drawingState = {
   isDrawing: false,
   lastX: 0,
   lastY: 0,
-  checkMode: false
+  checkMode: false,
+  enabled: false
 };
 
-function toggleDrawingToolbar() {
-  const tools = document.querySelector('.drawing-tools');
-  tools.classList.toggle('open');
+function openDrawingTools() {
+  document.getElementById('drawing-modal').classList.add('open');
+  updateDrawingToggleButton();
 }
 
-// ツールバー外クリックで閉じる
-document.addEventListener('click', e => {
-  const toolbar = document.querySelector('.drawing-toolbar');
-  const tools = document.querySelector('.drawing-tools');
-  if (toolbar && !toolbar.contains(e.target)) {
-    tools.classList.remove('open');
+function closeDrawingTools() {
+  document.getElementById('drawing-modal').classList.remove('open');
+}
+
+function toggleDrawingEnabled() {
+  drawingState.enabled = !drawingState.enabled;
+  updateDrawingToggleButton();
+  updateDrawingCanvas();
+  showToast(drawingState.enabled ? '✏️ 手書きモード ON' : '手書きモード OFF');
+}
+
+function updateDrawingToggleButton() {
+  const btn = document.getElementById('drawing-toggle-btn');
+  const status = document.getElementById('toggle-status');
+  if (drawingState.enabled) {
+    btn.classList.add('active');
+    status.textContent = 'ON';
+  } else {
+    btn.classList.remove('active');
+    status.textContent = 'OFF';
   }
-});
+}
+
+function updateDrawingCanvas() {
+  const drawCanvas = document.getElementById('drawing-canvas');
+  
+  // チェックモードの場合
+  if (drawingState.checkMode) {
+    drawCanvas.style.pointerEvents = 'auto';
+    drawCanvas.style.cursor = 'pointer';
+  }
+  // 手書きモードの場合
+  else if (drawingState.enabled && (drawingState.tool === 'pen' || drawingState.tool === 'eraser')) {
+    drawCanvas.style.pointerEvents = 'auto';
+    drawCanvas.style.cursor = drawingState.tool === 'pen' ? 'crosshair' : 'cell';
+  }
+  // どちらもOFFの場合
+  else {
+    drawCanvas.style.pointerEvents = 'none';
+    drawCanvas.style.cursor = 'default';
+  }
+}
 
 function initDrawingCanvas() {
   const pdfCanvas = document.getElementById('pdf-canvas');
@@ -2628,6 +2046,9 @@ function initDrawingCanvas() {
   
   // 既存の描画を復元
   loadDrawing();
+  
+  // pointer-eventsの状態を更新
+  updateDrawingCanvas();
 }
 
 function setDrawTool(tool) {
@@ -2635,15 +2056,9 @@ function setDrawTool(tool) {
   document.querySelectorAll('.draw-tool').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tool === tool);
   });
-  const drawCanvas = document.getElementById('drawing-canvas');
   
-  // ペンまたは消しゴムの時のみタッチ有効
-  if (tool === 'pen' || tool === 'eraser') {
-    drawCanvas.style.pointerEvents = 'auto';
-    drawCanvas.style.cursor = tool === 'pen' ? 'crosshair' : 'cell';
-  } else {
-    drawCanvas.style.pointerEvents = 'none';
-  }
+  // enabled状態を考慮してタッチ有効/無効を設定
+  updateDrawingCanvas();
 }
 
 function setDrawColor(color) {
